@@ -15,8 +15,7 @@ def test_purges_after_ttl():
   mockdatetime = MockDatetime(datetime(2019, 4, 1, 10))
   cache = IdleTTLCache(timedelta(hours=2))
 
-  @patch('datetime.datetime', mockdatetime)
-  def with_patched_datetime():
+  with patch('datetime.datetime', mockdatetime):
     cache.put('key_a', 'payload')
 
     #after one hour
@@ -29,14 +28,11 @@ def test_purges_after_ttl():
     cache.purge_expired_entries()
     assert('key_a' not in cache)
 
-  with_patched_datetime()
-
 def test_ttl_refreshes_after_get():
   mockdatetime = MockDatetime(datetime(2019, 4, 1, 10))
   cache = IdleTTLCache(timedelta(hours=2))
 
-  @patch('datetime.datetime', mockdatetime)
-  def with_patched_datetime():
+  with patch('datetime.datetime', mockdatetime):
     cache.put('key_a', 'payload')
 
     #after one hour
@@ -55,4 +51,3 @@ def test_ttl_refreshes_after_get():
     mockdatetime.set_now(datetime(2019, 4, 1, 13, 1))
     cache.purge_expired_entries()
     assert('key_a' not in cache)
-  with_patched_datetime()
