@@ -37,6 +37,7 @@ DEFAULT_EXPIRATION_TTL = 7 * 24 * 3600  # A week
 
 MODEL_LAST_LOADED: Dict[str, datetime] = {}
 MODEL_CACHE = IdleTTLCache(timedelta(hours=2))
+MODEL_CACHE.start_ttl_thread()
 
 
 redis = Redis.from_url(os.environ.get("REDIS_URL", "redis://localhost/0"))
@@ -158,6 +159,7 @@ def schedule_tests(branch, rev):
     # Autoland should always rebase on top of parents, never on tip
     default_base = "tip" if branch != "integration/autoland" else None
     try:
+        pass
         apply_stack(REPO_DIR, stack, branch, default_base)
     except Exception as e:
         LOGGER.warning(f"Failed to apply stack {branch} @ {rev}: {e}")
